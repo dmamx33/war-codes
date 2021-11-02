@@ -89,7 +89,7 @@ char blynk_status[25];
 /////////////################# NTP Client Specific #####################///////
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 3600;  //Germany is GMT +1, expressed in seconds
-const int daylightOffset_sec = 3600;   // There is one extra hour in DST
+const int daylightOffset_sec = 0;   // There is one extra hour in DST
 /////////////################# Blynk  config ###################///////
 char auth[] = "DZJ5YStEBLYrOid9YuJH-Qm3QDPuy-Oe";    // token from the app
 //BlynkTimer timer;
@@ -103,6 +103,10 @@ volatile long LowLevel=0;
 volatile long HighLevel=0;
 volatile bool NEW_DATA = false;
 volatile bool FIRST_TIME = false;
+/////////////################# Temp cal par ###################///////
+const float coeff2 = -0.00429;
+const float coeff1 = 1.18367;
+const float coeff0 = -5.46904;
 /////////////################# Touch_LCD ###################///////
 clima_data var_data;
 bool wifiFlag=LOW;
@@ -902,7 +906,9 @@ void dataSensorRequest(){
                 dateString = getZeit();
                 fechaString = getDatum(IN_NUMBERS);
         }
-        varTemp = iaqSensor.temperature;
+        double uncal = iaqSensor.temperature;
+        varTemp = (coeff2 * uncal* uncal) + (coeff1 * uncal) + coeff0;
+        //varTemp = iaqSensor.temperature;
         varPres = iaqSensor.pressure;
         varHumi = iaqSensor.humidity;
         varGasR = iaqSensor.gasResistance;
