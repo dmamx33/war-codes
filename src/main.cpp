@@ -104,9 +104,11 @@ volatile long HighLevel=0;
 volatile bool NEW_DATA = false;
 volatile bool FIRST_TIME = false;
 /////////////################# Temp cal par ###################///////
-const float coeff2 = -0.00429;
-const float coeff1 = 1.18367;
-const float coeff0 = -5.46904;
+// const float coeff2 = -0.00429;//Second order poly
+// const float coeff1 = 1.18367;
+// const float coeff0 = -5.46904;
+const float coeff1 = 0.988196;
+const float coeff0 = -3.426292;
 /////////////################# Touch_LCD ###################///////
 clima_data var_data;
 bool wifiFlag=LOW;
@@ -907,7 +909,8 @@ void dataSensorRequest(){
                 fechaString = getDatum(IN_NUMBERS);
         }
         double uncal = iaqSensor.temperature;
-        varTemp = (coeff2 * uncal* uncal) + (coeff1 * uncal) + coeff0;
+        //varTemp = (coeff2 * uncal* uncal) + (coeff1 * uncal) + coeff0;
+        varTemp = (coeff1 * uncal) -  (coeff0);
         //varTemp = iaqSensor.temperature;
         varPres = iaqSensor.pressure;
         varHumi = iaqSensor.humidity;
